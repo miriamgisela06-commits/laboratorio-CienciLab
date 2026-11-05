@@ -1,0 +1,110 @@
+/* =========================================
+   Paleta de Colores - VirtuaLab (image_438a98.png)
+   ========================================= */
+:root {
+  --color-fondo-principal: #0a130f; /* Verde azulado oscuro (fondo del logo) */
+  --color-fondo-secundario: #122226; /* Verde azulado claro (fondo del icono) */
+  --color-texto-blanco: #ffffff;    /* Texto "Virtua" y ajolote */
+  --color-acento-amarillo: #34d399; /* Texto "Lab" */
+  --color-sombra: rgba(0, 0, 0, 0.3);
+}
+
+/* =========================================
+   Estilos Base (Tema Oscuro y Tipografía)
+   ========================================= */
+body {
+  background-color: var(--color-fondo-principal);
+  color: var(--color-texto-blanco);
+  font-family: system-ui, -apple-system, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Encabezados y Barras de Navegación */
+header, nav {
+  background-color: var(--color-fondo-secundario);
+  color: var(--color-texto-blanco);
+  padding: 15px 20px;
+  box-shadow: 0 4px 6px var(--color-sombra);
+  display: flex;
+  flex-wrap: wrap; /* Permite que los elementos se acomoden en pantallas pequeñas */
+  align-items: center;
+  justify-content: space-between;
+}
+
+header h1, header h2, h3 {
+  margin: 0;
+  color: var(--color-texto-blanco);
+}
+
+
+/* Clase de utilidad para resaltar texto como en el logo */
+.texto-resaltado {
+  color: var(--color-acento-amarillo);
+}
+
+/* =========================================
+   Estructura de Contenidos y Botones
+   ========================================= */
+main, .contenedor, .panel-info, .subject-card {
+  background-color: var(--color-fondo-secundario);
+  border: 1px solid rgba(255, 255, 255, 0.842);
+  border-radius: 15px;
+  padding: 20px;
+  margin: 15px auto;
+  max-width: 1200px;
+  width: 75%;
+  flex-direction: column;
+
+  box-shadow: 0 4px 8px var(--color-sombra);
+}
+
+button, .btn, span {
+  background-color: var(--color-acento-amarillo);
+  color: var(--color-fondo-principal);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 9px;
+  margin: 15px auto;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  text-decoration: none;
+  display: INLINE;
+}
+
+button:hover, .btn:hover {
+  background-color: #f0c055;
+  transform: translateY(-2px);
+}
+
+/* =========================================
+   Diseño Responsivo (Celulares y Tablets)
+   ========================================= */
+@media (max-width: 768px) {
+  header, nav {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+    padding: 15px 10px;
+  }
+  
+  main, .contenedor, .panel-info, .subject-card {
+    width: 80%;
+    padding: 15px;
+    margin: 10px auto;
+  }
+  
+  button, .btn, span {
+    width: 100%;
+    margin-top: 10px;
+    padding: 5px; /* Área de toque más amplia para pulgares */
+  }
+}
+
+/* =========================================
+   ZONA PROTEGIDA: ANIMACIONES DEL LABORATORIO
+   Asegúrate de dejar intacto todo el CSS original
+   que controla el Canvas, los matraces, mecheros 
+   y las anim

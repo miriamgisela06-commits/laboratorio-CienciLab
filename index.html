@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LabVirtual PWA - Inicio</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app-container">
+        <header class="app-header">
+            <img src="logo.png" width="300" alt="CienciLab" class="logo-img">
+        
+            <h3>Tu laboratorio de ciencias, donde estés.</h3>
+            <p>Bienvenido(a)</p>
+            <p>Selecciona una materia para comenzar</p>
+        </header>
+
+        
+            <!-- Tarjeta que lleva a la carpeta de química -->
+            <div class="subject-card active" onclick="location.href='quimica/index.html'">
+                <h2>Química</h2>
+                <p>Estructura atómica y reacciones.</p>
+                
+                <span class="badge available">Entrar</span>
+            </div>
+
+            <!-- Tarjeta que lleva a la carpeta de física -->
+            <div class="subject-card active" onclick="location.href='fisica/index.html'">
+                <h2>Física</h2>
+                <p>Cinemática y movimiento.</p>
+                <span class="badge available">Entrar</span>
+            </div>
+        
+    </div>
+</body>
+</html>
