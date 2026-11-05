@@ -54,6 +54,18 @@ Identificación del estudiante, planteamiento del problema y formulación de hip
 
 <img src="img/captura-bicarbonato.png" alt="Práctica de Vinagre y Bicarbonato" width="300">
 
+Asistente virtual
+
+El ajolote de CienciLab acompaña al estudiante durante la práctica y le hace preguntas para guiar su razonamiento (por ejemplo, qué datos respaldan su hipótesis).
+
+<img src="img/asistente-ia.jpg" alt="Asistente virtual de CienciLab" width="300">
+
+ Video demostrativo
+
+Recorrido por la aplicación (duración: 3 min 51 s):
+
+Ver el video demostrativo <img/demo-cincilab.mp4>
+
 ##  Estructura del proyecto
 
 ```
