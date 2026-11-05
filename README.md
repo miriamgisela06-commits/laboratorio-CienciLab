@@ -61,7 +61,7 @@ El ajolote de CienciLab acompaña al estudiante durante la práctica y le hace p
 <img src="img-asistente-video/img/asistente-ia.jpg" alt="Asistente virtual de CienciLab" width="300">
  Video demostrativo
 
-Recorrido por la aplicación (duración: 3 min 51 s):
+Recorrido por la aplicación:
 
 Ver el video demostrativo media/demo-cincilab.mp4
 ##  Estructura del proyecto
