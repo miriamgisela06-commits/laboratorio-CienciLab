@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab - Concentración y Dilución</title>
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .experiment-card { max-width: 650px; margin: 0 auto; text-align: left; }
+        .experiment-card h3 { text-align: center; color: var(--accent-cyan); margin-bottom: 10px; }
+        .box-seccion { background: var(--bg-color); border: 1px solid var(--border-color); padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div id="app-container">
+        <nav class="lab-nav">
+            <button class="btn-back" onclick="location.href='index.html'">⬅️ Volver a Temas</button>
+            <h2>💧 Concentración y Dilución</h2>
+        </nav>
+
+        <main class="experiment-card">
+            <h3>Calculadora de Soluciones</h3>
+            <p style="color: var(--text-secondary); text-align: center; margin-bottom: 20px;">
+                Modifica las proporciones de soluto y agua para calcular y visualizar cambios de concentración[cite: 3].
+            </p>
+
+            <div class="box-seccion">
+                <label style="display:block; font-size: 0.85rem; color: var(--text-secondary);">Masa de Soluto (gramos): <span id="val-soluto">10</span>g</label>
+                <input type="range" id="range-soluto" min="1" max="100" value="10" style="width:100%; margin-bottom: 15px;" oninput="calcularDilucion()">
+
+                <label style="display:block; font-size: 0.85rem; color: var(--text-secondary);">Volumen de Disolvente / Agua (litros): <span id="val-agua">1.0</span>L</label>
+                <input type="range" id="range-agua" min="0.5" max="5.0" step="0.5" value="1.0" style="width:100%; margin-bottom: 15px;" oninput="calcularDilucion()">
+            </div>
+
+            <div style="background: rgba(188, 140, 255, 0.1); border: 1px dashed var(--accent-purple); padding: 15px; border-radius: 8px; text-align: center;">
+                <h4 style="color: var(--accent-purple); margin-bottom: 5px;">Concentración Calculada</h4>
+                <p id="resultado-concentracion" style="font-size: 1.2rem; font-weight: bold;">10.00 g/L</p>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function calcularDilucion() {
+            let soluto = parseFloat(document.getElementById('range-soluto').value);
+            let agua = parseFloat(document.getElementById('range-agua').value);
+
+            document.getElementById('val-soluto').innerText = soluto;
+            document.getElementById('val-agua').innerText = agua.toFixed(1);
+
+            let concentracion = soluto / agua;
+            document.getElementById('resultado-concentracion.innerText' in window ? 'resultado-concentracion' : 'resultado-concentracion').innerText = `${concentracion.toFixed(2)} g/L`;
+        }
+    </script>
+</body>
+</html>

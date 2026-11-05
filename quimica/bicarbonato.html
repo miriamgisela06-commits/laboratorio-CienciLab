@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratorio - Reacción Vinagre y Bicarbonato</title>
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .experiment-card { max-width: 850px; margin: 0 auto; text-align: left; }
+        .experiment-card h3 { text-align: center; color: var(--accent-cyan); margin-bottom: 5px; }
+        .step-box { background: var(--bg-color); border: 1px solid var(--border-color); padding: 20px; border-radius: 10px; margin-bottom: 20px; }
+        .step-title { color: var(--accent-purple); font-weight: bold; margin-bottom: 12px; font-size: 1.1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 5px; }
+        
+        .lab-workspace-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: center;
+        }
+        @media (max-width: 768px) {
+            .lab-workspace-grid { grid-template-columns: 1fr; }
+        }
+        .canvas-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(13, 17, 23, 0.6);
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app-container">
+        <nav class="lab-nav">
+            <button class="btn-back" onclick="location.href='index.html'">Volver al Menú</button>
+            <h2>Reacción: Vinagre y Bicarbonato de Sodio</h2>
+        </nav>
+
+        <main class="experiment-card">
+            <h3>Laboratorio Didáctico: Método Científico</h3>
+            <p style="color: var(--text-secondary); text-align: center; margin-bottom: 20px;">
+                Experimenta de forma guiada el principio de conservación de la materia y la generación de gas dióxido de carbono.
+            </p>
+
+            <!-- REGISTRO DE USUARIO -->
+            <div class="step-box" id="box-user">
+                <div class="step-title">Identificación del Estudiante</div>
+                <label style="display:block; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 5px;">Nombre del Estudiante (User):</label>
+                <input type="text" id="input-username" placeholder="Ej: Juan Pérez" style="width: 100%; padding: 10px; background: var(--card-bg); border: 1px solid var(--border-color); color: white; border-radius: 6px; margin-bottom: 10px;">
+                <button class="btn-action" onclick="iniciarSesion()">Comenzar Práctica</button>
+            </div>
+
+            <!-- PASO 1: PROBLEMA -->
+            <div class="step-box locked-step" id="step-1" style="opacity: 0.4; pointer-events: none;">
+                <div class="step-title">Paso 1: Planteamiento del Problema</div>
+                <p style="font-size: 0.95rem; line-height: 1.4; color: var(--text-primary);">
+                    ¿Cómo influye la cantidad de bicarbonato de sodio añadida a un volumen fijo de vinagre en la altura del líquido, la formación de espuma y el posible desbordamiento en un vaso de precipitados de 350 ml?
+                </p>
+                <button class="btn-action" style="margin-top: 15px;" onclick="completarPaso1()">Entendido, continuar</button>
+            </div>
+
+            <!-- PASO 2: HIPÓTESIS -->
+            <div class="step-box locked-step" id="step-2" style="opacity: 0.4; pointer-events: none;">
+                <div class="step-title">Paso 2: Formulación de Hipótesis</div>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">
+                    Escribe tu predicción antes de manipular las variables. Una vez fijada, no podrá modificarse.
+                </p>
+                <textarea id="input-hipotesis" placeholder="Ej: Si añado más de 15g de bicarbonato a 100ml de vinagre, la espuma superará los 350ml y el vaso se derramará..." style="width: 100%; height: 75px; padding: 10px; background: var(--card-bg); border: 1px solid var(--border-color); color: white; border-radius: 6px; resize: none; margin-bottom: 10px;"></textarea>
+                <button class="btn-action" id="btn-fijar-hipotesis" onclick="fijarHipotesis()">Fijar Hipótesis</button>
+            </div>
+
+            <!-- PASO 3: EXPERIMENTACIÓN -->
+            <div id="step-3" class="step-box locked-step" style="opacity: 0.4; pointer-events: none;">
+                <div class="step-title">
+                    Paso 3: Experimentación (Variables)
+                </div>
+
+                <div class="lab-workspace-grid">
+                    <!-- PANEL DE CONTROLES -->
+                    <div class="controls-panel">
+                        <label>
+                            Vinagre (ml):
+                            <strong id="val-vin">100</strong> ml
+                        </label>
+
+                        <input
+                            type="range"
+                            id="range-vinagre"
+                            min="20"
+                            max="250"
+                            step="10"
+                            value="100"
+                            style="width:100%; margin:10px 0 20px;"
+                            oninput="actualizarVariablesEnVivo()"
+                        >
+
+                        <label>
+                            Bicarbonato de sodio (g):
+                            <strong id="val-bic">10</strong> g
+                        </label>
+
+                        <input
+                            type="range"
+                            id="range-bicarbonato"
+                            min="2"
+                            max="35"
+                            step="2"
+                            value="10"
+                            style="width:100%; margin:10px 0 25px;"
+                            oninput="actualizarVariablesEnVivo()"
+                        >
+
+                        <!-- BOTÓN DE EXPERIMENTACIÓN -->
+                        <button
+                            class="btn-action"
+                            id="btn-reaccion"
+                            style="width:100%; padding:14px; margin-top:10px;"
+                            onclick="ejecutarReaccionRealista()">
+                            🧪 Agregar Bicarbonato y Observar
+                        </button>
+
+                        <p style="font-size:0.8rem; color:var(--text-secondary); text-align:center; margin-top:10px;">
+                            Modifica las cantidades y ejecuta la reacción para observar los resultados.
+                        </p>
+                    </div>
+
+                    <!-- VISUALIZACIÓN DEL EXPERIMENTO -->
+                    <div class="canvas-container">
+                        <h4 style="color:var(--accent-cyan); margin-bottom:10px;">
+                            Simulación del vaso de precipitados
+                        </h4>
+                        <canvas id="beakerCanvas" width="220" height="300"></canvas>
+                        <p style="font-size:0.8rem; color:var(--text-secondary);">
+                            Capacidad máxima: 350 ml
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PASO 4: OBSERVACIÓN -->
+            <div id="step-4" class="step-box locked-step" style="opacity: 0.4; pointer-events: none;">
+                <div class="step-title">Paso 4: Observación de Resultados</div>
+                <div id="datos-experimentales" style="background: var(--card-bg); padding: 12px; border-radius: 6px; margin-bottom: 12px; font-size: 0.9rem; color: var(--accent-cyan);"></div>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">
+                    Redacta tus observaciones basándote en los datos del ensayo:
+                </p>
+                <textarea id="input-observacion" placeholder="Describe qué viste en el vaso, el nivel alcanzado y el comportamiento del gas..." style="width: 100%; height: 75px; padding: 10px; background: var(--card-bg); border: 1px solid var(--border-color); color: white; border-radius: 6px; resize: none; margin-bottom: 10px;"></textarea>
+                <button class="btn-action" onclick="guardarObservacion()">Guardar Observación</button>
+            </div>
+
+            <!-- PASO 5: ANÁLISIS -->
+            <div id="step-5" class="step-box locked-step" style="opacity: 0.4; pointer-events: none;">
+                <div class="step-title">Paso 5: Análisis Crítico</div>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">
+                    Contrasta tu observación con tu hipótesis inicial planteada en el Paso 2:
+                </p>
+                <textarea id="input-analisis" placeholder="Explica si se cumplió tu predicción..." style="width: 100%; height: 75px; padding: 10px; background: var(--card-bg); border: 1px solid var(--border-color); color: white; border-radius: 6px; resize: none; margin-bottom: 10px;"></textarea>
+                <button class="btn-action" onclick="guardarAnalisis()">Validar Análisis</button>
+            </div>
+
+            <!-- PASO 6: CONCLUSIÓN Y EXPORTACIÓN -->
+            <div id="step-6" class="step-box locked-step" style="opacity: 0.4; pointer-events: none; border-color: var(--success);">
+                <div class="step-title" style="color: var(--success);">Paso 6: Conclusión y Ficha de Laboratorio</div>
+                <p id="texto-conclusion" style="font-size: 0.95rem; line-height: 1.5; margin-bottom: 15px;"></p>
+                
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <button class="btn-action" style="background-color: var(--success); color: white; padding: 14px;" onclick="alert('¡Ficha de laboratorio guardada correctamente en el dispositivo en modo offline!')">Guardar Reporte Final</button>
+                    
+                    <button class="btn-action" style="background-color: #175b6a; color: white; padding: 14px;" onclick="exportarReporteWord()">
+                        Exportar Ficha a PDF (.pdf)
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let username = "";
+        const canvas = document.getElementById('beakerCanvas');
+        const ctx = canvas.getContext('2d');
+        const MAX_CAPACIDAD = 350; // ml
+
+        function iniciarSesion() {
+            username = document.getElementById('input-username').value;
+            if(!username.trim()) {
+                alert('Por favor, ingresa tu nombre de usuario para comenzar.');
+                return;
+            }
+            document.getElementById('box-user').style.opacity = '0.6';
+            document.getElementById('box-user').style.pointerEvents = 'none';
+            
+            let s1 = document.getElementById('step-1');
+            s1.style.opacity = '1';
+            s1.style.pointerEvents = 'auto';
+        }
+
+        function completarPaso1() {
+            let s1 = document.getElementById('step-1');
+            s1.style.opacity = '0.6';
+            s1.style.pointerEvents = 'none';
+
+            let s2 = document.getElementById('step-2');
+            s2.style.opacity = '1';
+            s2.style.pointerEvents = 'auto';
+        }
+
+        function dibujarVaso(nivelLiquidoMl, nivelEspumaMl) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            let x = 60;
+            let yTop = 45;
+            let ancho = 110;
+            let altoMax = 210;
+
+            let hLiquido = Math.min((nivelLiquidoMl / MAX_CAPACIDAD) * altoMax, altoMax);
+            let yLiquido = (yTop + altoMax) - hLiquido;
+            ctx.fillStyle = 'rgba(88, 166, 255, 0.35)';
+            ctx.fillRect(x, yLiquido, ancho, hLiquido);
+
+            if (nivelEspumaMl > 0) {
+                let hEspumaTotal = ((nivelLiquidoMl + nivelEspumaMl) / MAX_CAPACIDAD) * altoMax;
+                let hEspumaVisual = Math.min(hEspumaTotal, altoMax);
+                let yEspuma = (yTop + altoMax) - hEspumaVisual;
+                
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+                ctx.fillRect(x, yEspuma, ancho, (yTop + altoMax) - yEspuma);
+
+                if (nivelLiquidoMl + nivelEspumaMl > MAX_CAPACIDAD) {
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                    ctx.beginPath();
+                    ctx.arc(x - 4, yTop + 5, 5, 0, Math.PI * 2);
+                    ctx.arc(x - 8, yTop + 18, 7, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.beginPath();
+                    ctx.arc(x + ancho + 4, yTop + 5, 5, 0, Math.PI * 2);
+                    ctx.arc(x + ancho + 8, yTop + 20, 8, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            ctx.strokeStyle = '#c9d1d9';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(x, yTop);
+            ctx.lineTo(x, yTop + altoMax);
+            ctx.quadraticCurveTo(x, yTop + altoMax + 8, x + 8, yTop + altoMax + 8);
+            ctx.lineTo(x + ancho - 8, yTop + altoMax + 8);
+            ctx.quadraticCurveTo(x + ancho, yTop + altoMax + 8, x + ancho, yTop + altoMax);
+            ctx.lineTo(x + ancho, yTop);
+            ctx.stroke();
+
+            ctx.fillStyle = '#8b949e';
+            ctx.font = '10px monospace';
+            for (let ml = 0; ml <= MAX_CAPACIDAD; ml += 10) {
+                let yTick = (yTop + altoMax) - (ml / MAX_CAPACIDAD) * altoMax;
+                let esPrincipal = (ml % 50 === 0);
+                let largoLinea = esPrincipal ? 8 : 4;
+
+                ctx.beginPath();
+                ctx.moveTo(x, yTick);
+                ctx.lineTo(x + largoLinea, yTick);
+                ctx.strokeStyle = '#8b949e';
+                ctx.lineWidth = esPrincipal ? 2 : 1;
+                ctx.stroke();
+
+                if (esPrincipal && ml > 0) {
+                    ctx.fillText(ml + 'ml', x + 12, yTick + 4);
+                }
+            }
+        }
+
+        actualizarVariablesEnVivo();
+
+        function actualizarVariablesEnVivo() {
+            let vin = parseInt(document.getElementById('range-vinagre').value);
+            document.getElementById('val-vin').innerText = vin;
+            document.getElementById('val-bic').innerText = document.getElementById('range-bicarbonato').value;
+            dibujarVaso(vin, 0);
+        }
+
+        function fijarHipotesis() {
+            let hipotesis = document.getElementById('input-hipotesis').value;
+            if(!hipotesis.trim()) {
+                alert('Por favor, escribe tu hipótesis antes de fijarla.');
+                return;
+            }
+
+            let campo = document.getElementById('input-hipotesis');
+            campo.disabled = true;
+            campo.style.backgroundColor = '#0d1117';
+            campo.style.color = 'var(--text-secondary)';
+
+            let s2 = document.getElementById('step-2');
+            s2.style.opacity = '0.6';
+            s2.style.pointerEvents = 'none';
+
+            let s3 = document.getElementById('step-3');
+            s3.style.opacity = '1';
+            s3.style.pointerEvents = 'auto';
+        }
+
+        function ejecutarReaccionRealista() {
+            let vin = parseInt(document.getElementById('range-vinagre').value);
+            let bic = parseInt(document.getElementById('range-bicarbonato').value);
+
+            let volumenEspumaGenerada = bic * 9;
+            let volumenTotalSimulado = vin + volumenEspumaGenerada;
+
+            let step = 0;
+            let maxSteps = 25;
+            let timer = setInterval(() => {
+                step++;
+                let currentEspuma = (volumenEspumaGenerada * (step / maxSteps));
+                dibujarVaso(vin, currentEspuma);
+
+                if (step >= maxSteps) {
+                    clearInterval(timer);
+                    
+                    let s3 = document.getElementById('step-3');
+                    s3.style.opacity = '0.6';
+                    s3.style.pointerEvents = 'none';
+
+                    let s4 = document.getElementById('step-4');
+                    s4.style.opacity = '1';
+                    s4.style.pointerEvents = 'auto';
+
+                    document.getElementById('datos-experimentales').innerHTML = `
+                        <b>Datos del Ensayo Registrados:</b><br>
+                        • Vinagre inicial: <b>${vin} ml</b><br>
+                        • Bicarbonato añadido: <b>${bic} g</b><br>
+                        • Volumen total con gas: <b>${volumenTotalSimulado.toFixed(0)} ml</b> (Capacidad vaso: 350 ml)
+                    `;
+                }
+            }, 30);
+        }
+
+        function guardarObservacion() {
+            let obs = document.getElementById('input-observacion').value;
+            if(!obs.trim()) {
+                alert('Por favor, redacta tu observación.');
+                return;
+            }
+            let s4 = document.getElementById('step-4');
+            s4.style.opacity = '0.6';
+            s4.style.pointerEvents = 'none';
+
+            let s5 = document.getElementById('step-5');
+            s5.style.opacity = '1';
+            s5.style.pointerEvents = 'auto';
+        }
+
+        function guardarAnalisis() {
+            let analisis = document.getElementById('input-analisis').value;
+            if(!analisis.trim()) {
+                alert('Por favor, redacta tu análisis.');
+                return;
+            }
+            let s5 = document.getElementById('step-5');
+            s5.style.opacity = '0.6';
+            s5.style.pointerEvents = 'none';
+
+            let s6 = document.getElementById('step-6');
+            s6.style.opacity = '1';
+            s6.style.pointerEvents = 'auto';
+
+            document.getElementById('texto-conclusion').innerHTML = `
+                <b>Ficha Final de Laboratorio - Estudiante: ${username}</b><br>
+                • <b>Hipótesis planteada:</b> "${document.getElementById('input-hipotesis').value}"<br>
+                • <b>Observación del estudiante:</b> "${document.getElementById('input-observacion').value}"<br>
+                • <b>Análisis crítico:</b> "${analisis}"<br><br>
+                <b>Conclusión Científica:</b> La reacción entre el ácido acético y el bicarbonato de sodio genera de forma controlada gas dióxido de carbono. El registro cuidadoso de las variables en el vaso graduado de 350 ml permite validar el principio de estequiometría de manera rigurosa.
+            `;
+        }
+
+        function exportarReporteWord() {
+            let username = document.getElementById('input-username').value || "Estudiante";
+            let hipotesis = document.getElementById('input-hipotesis').value || "No registrada";
+            let vinagre = document.getElementById('range-vinagre').value;
+            let bicarbonato = document.getElementById('range-bicarbonato').value;
+            let observacion = document.getElementById('input-observacion').value || "Sin observaciones";
+            let analisis = document.getElementById('input-analisis').value || "Sin análisis";
+            
+            let contenidoHtml = `
+                <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+                <head>
+                    <meta charset="utf-8">
+                    <title>Ficha de Laboratorio - VirtuaLab</title>
+                    <style>
+                        body { font-family: 'Segoe UI', Arial, sans-serif; color: #333; line-height: 1.6; padding: 20px; }
+                        h1 { color: #0b3948; text-align: center; border-bottom: 2px solid #dda835; padding-bottom: 10px; }
+                        h2 { color: #114b5f; margin-top: 20px; }
+                        .seccion { background: #f9f9f9; border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 6px; }
+                        .footer { font-size: 0.85rem; color: #666; text-align: center; margin-top: 30px; border-top: 1px solid #ccc; padding-top: 10px; }
+                    </style>
+                </head>
+                <body>
+                    <h1>VirtuaLab - Ficha Experimental de Química</h1>
+                    
+                    <div class="seccion">
+                        <p><strong>Estudiante:</strong> ${username}</p>
+                        <p><strong>Fecha de Ejecución:</strong> ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}</p>
+                    </div>
+
+                    <h2>1. Planteamiento e Hipótesis</h2>
+                    <div class="seccion">
+                        <p><strong>Hipótesis planteada:</strong></p>
+                        <p><em>"${hipotesis}"</em></p>
+                    </div>
+
+                    <h2>2. Datos de Experimentación</h2>
+                    <div class="seccion">
+                        <ul>
+                            <li><strong>Volumen de Vinagre inicial:</strong> ${vinagre} ml</li>
+                            <li><strong>Masa de Bicarbonato de Sodio:</strong> ${bicarbonato} g</li>
+                            <li><strong>Volumen total estimado de gas/espuma:</strong> ${(parseInt(bicarbonato) * 9 + parseInt(vinagre)).toFixed(0)} ml</li>
+                        </ul>
+                    </div>
+
+                    <h2>3. Observaciones del Estudiante</h2>
+                    <div class="seccion">
+                        <p>${observacion}</p>
+                    </div>
+
+                    <h2>4. Análisis Crítico</h2>
+                    <div class="seccion">
+                        <p>${analisis}</p>
+                    </div>
+
+                    <h2>5. Conclusión Científica</h2>
+                    <div class="seccion">
+                        <p>La reacción entre el ácido acético (vinagre) y el bicarbonato de sodio genera gas dióxido de carbono ($CO_2$), provocando un aumento en el volumen de espuma dentro del vaso de precipitados de 350 ml conforme a los principios de estequiometría.</p>
+                    </div>
+
+                    <div class="footer">
+                        Generado automáticamente desde VirtuaLab PWA - Modo Offline.
+                    </div>
+                </body>
+                </html>
+            `;
+
+            let blob = new Blob(['\ufeff' + contenidoHtml], {
+                type: 'application/msword'
+            });
+
+            let url = URL.createObjectURL(blob);
+            let a = document.createElement('a');
+            a.href = url;
+            a.download = `Reporte_Laboratorio_${username.replace(/\s+/g, '_')}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>

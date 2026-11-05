@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratorio de Física</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <div id="app-container">
+        <!-- Barra de navegación para volver al inicio global -->
+        <nav class="lab-nav">
+            <button class="btn-back" onclick="location.href='../index.html'">Volver a Materias</button>
+            <h2>Laboratorio de Física</h2>
+        </nav>
+
+        
+        
+            <div class="subject-card active" onclick="location.href='mru.html'">
+                <h2>Cinemática (MRU)</h2>
+                <p>Estudio del movimiento rectilíneo uniforme, distancia, tiempo y velocidad.</p>
+                <span class="badge available">Entrar</span>
+            </div>
+
+            <!-- Tema futuro preparado -->
+            <div class="subject-card disabled">
+                <h2>MRUV y Aceleración</h2>
+                <p>Análisis de la aceleración constante y la gravedad.</p>
+                <span class="badge locked">Entrar</span>
+            </div>
+        
+    </div>
+</body>
+</html>

@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratorio - Cinemática (MRU)</title>
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .experiment-card { max-width: 850px; width: 100%; margin: 0 auto; text-align: left; box-sizing: border-box; }
+        .experiment-card h3 { text-align: center; color: var(--accent-cyan); margin-bottom: 5px; }
+        .step-box { background: var(--bg-color); border: 1px solid var(--border-color); padding: 15px; border-radius: 10px; margin-bottom: 20px; box-sizing: border-box; overflow: hidden; }
+        .step-title { color: var(--accent-purple); font-weight: bold; margin-bottom: 12px; font-size: 1.1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 5px; }
+        
+        .lab-workspace-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            align-items: center;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        @media (max-width: 768px) {
+            .lab-workspace-grid { grid-template-columns: 1fr; }
+            body { padding: 10px; }
+            .experiment-card { padding: 5px; }
+        }
+        .canvas-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(13, 17, 23, 0.6);
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            border-radius: 8px;
+            width: 100%;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+        .formula-box {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--accent-cyan);
+            margin-bottom: 20px;
+            font-family: monospace;
+        }
+        .input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .input-group input[type="number"] {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: white;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 1rem;
+            width: 90px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app-container" style="width: 100%; max-width: 850px; margin: 0 auto; box-sizing: border-box; padding: 10px;">
+        <!-- Barra de navegación -->
+        <nav class="lab-nav">
+            <button class="btn-back" onclick="location.href='index.html'">Volver a Temas</button>
+            <h2>Cinemática (MRU)</h2>
+        </nav>
+
+        <!-- Contenedor del experimento -->
+        <main class="experiment-card">
+            <h3>Laboratorio Didáctico: Movimiento Rectilíneo Uniforme</h3>
+            <p style="color: var(--text-secondary); text-align: center; margin-bottom: 20px; font-size: 0.9rem;">
+                Experimenta de forma guiada cómo la distancia y el tiempo determinan la velocidad constante de un móvil en línea recta.
+            </p>
+
+            <!-- REGISTRO DE USUARIO -->
+            <div class="step-box" id="box-user">
+                <div class="step-title">Identificación del Estudiante</div>
+                <label style="display:block; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 5px;">Nombre del Estudiante (User):</label>
+                <input type="text" id="input-username" placeholder="Ej: Juan Perez" style="width: 100%; padding: 10px; background: var(--card-bg); border: 1px solid var(--border-color); color: white; border-radius: 6px; margin-bottom: 10px; box-sizing: border-box;">
+                <button class="btn-action" onclick="iniciarSesion()">Comenzar Práctica</button>
+            </div>
+
+            <!-- PASO 1: PROBLEMA -->
+            <div class="step-box locked-step" id="step-1" style="opacity: 0.4; pointer-events: none;">
+                <div class="step-title">Paso 1: Planteamiento del Problema</div>
+                <p style="font-size: 0.95rem; line-height: 1.4; color: var(--text-primary);">
+                    ¿Cómo afecta modificar la distancia total a recorrer y el tiempo empleado en el valor de la velocidad constante de un móvil bajo los principios del MRU?
+                </p>
+                <button class="btn-action" style="margin-top: 15px;" onclick="completarPaso1()">Entendido, continuar</button>
+            </div>
+
+            <!-- PASO 2: HIPÓTESIS -->
+            <div class="step-box locked-step" id="step-2" style="opacity: 0.4; pointer-events: none;">
+                <div class="step-title">Paso 2: Formulación de Hipótesis</div>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">
+                    Escribe tu predicción antes de manipular las variables de distancia y tiempo.
+                </p>
+                <textarea id="input-hipotesis" placeholder="Ej: Si aumento la distancia manteniendo el tiempo fijo, la velocidad del móvil incrementará proporcionalmente..." style="width: 100%; height: 75px; padding: 10px; background: var(--card-bg); border: 1px solid var(--border-color); color: white; border-radius: 6px; resize: none; margin-bottom: 10px; box-sizing: border-box;"></textarea>
+                <button class="btn-action" id="btn-fijar-hipotesis" onclick="fijarHipotesis()">Fijar Hipótesis</button>
+            </div>
+
+            <!-- PASO 3: EXPERIMENTACIÓN Y ANIMACIÓN -->
+            <div id="step-3" class="step-box locked-step" style="opacity: 0.4; pointer-events: none;">
+                <div class="step-title">Paso 3: Experimentación (Simulación MRU)</div>
+                
+                <div class="formula-box">
+                    Fórmula: <strong>v = d / t</strong>
+                </div>
+
+                <div class="lab-workspace-grid">
+                    <div class="controls-panel">
+                        <label style="display:block; margin-bottom: 5px; color: var(--text-secondary);">Distancia (metros):</label>
+                        <div class="input-group">
+                            <input type="number" id="num-distancia" value="100" min="10" max="1000" oninput="sincronizarDesdeInput('distancia')">
+                            <span style="color:var(--accent-cyan); font-weight:bold;">m</span>
+                        </div>
+                        <input type="range" id="range-distancia" min="20" max="500" step="10" value="100" style="width:100%; margin-bottom: 15px;" oninput="sincronizarDesdeRange('distancia')">
+
+                        <label style="display:block; margin-bottom: 5px; color: var(--text-secondary);">Tiempo (segundos):</label>
+                        <div class="input-group">
+                            <input type="number" id="num-tiempo" value="10" min="1" max="120" oninput="sincronizarDesdeInput('tiempo')">
+                            <span style="color:var(--accent-cyan); font-weight:bold;">s</span>
+                        </div>
+                        <input type="range" id="range-tiempo" min="2" max="50" step="1" value="10" style="width:100%; margin-bottom: 20px;" oninput="sincronizarDesdeRange('tiempo')">
+
+                        <button class="btn-action" style="width: 100%; padding: 14px;" onclick="ejecutarAnimacionMRU()">🚗 Iniciar Animación y Calcular</button>
+                    </div>
+
+                    <div class="canvas-container">
+                        <h4 style="color:var(--accent-cyan); margin-bottom:10px; font-size:0.95rem;">Simulación de Pista Rectilínea</h4>
+                        <canvas id="mruCanvas" width="300" height="150"></canvas>
+                        <p style="font-size:0.8rem; color: var(--text-secondary); margin-top: 8px;" id="status-mru-texto">Velocidad: 10.00 m/s</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PASO 4: OBSERVACIÓN -->
+            <div id="step-4" class="step-box locked-step" style="opacity: 0.4; pointer-events: none;">
+                <div class="step-title">Paso 4: Observación de Resultados</div>
+                <div id="datos-experimentales" style="background: var(--card-bg); padding: 12px; border-radius: 6px; margin-bottom: 12px; font-size: 0.9rem; color: var(--accent-cyan); word-break: break-word;"></div>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">
+                    Redacta tus observaciones basadas en la simulación:
+                </p>
+                <textarea id="input-observacion" placeholder="Describe el comportamiento del móvil en la pista y la velocidad calculada..." style="width: 100%; height: 75px; padding: 10px; background: var(--card-bg); border: 1px solid var(--border-color); color: white; border-radius: 6px; resize: none; margin-bottom: 10px; box-sizing: border-box;"></textarea>
+                <button class="btn-action" onclick="guardarObservacion()">Guardar Observación</button>
+            </div>
+
+            <!-- PASO 5: ANÁLISIS -->
+            <div id="step-5" class="step-box locked-step" style="opacity: 0.4; pointer-events: none;">
+                <div class="step-title">Paso 5: Análisis Crítico</div>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">
+                    Contrasta tu observación con tu hipótesis inicial:
+                </p>
+                <textarea id="input-analisis" placeholder="Explica si tu predicción inicial fue correcta..." style="width: 100%; height: 75px; padding: 10px; background: var(--card-bg); border: 1px solid var(--border-color); color: white; border-radius: 6px; resize: none; margin-bottom: 10px; box-sizing: border-box;"></textarea>
+                <button class="btn-action" onclick="guardarAnalisis()">Validar Análisis</button>
+            </div>
+
+            <!-- PASO 6: CONCLUSIÓN Y EXPORTACIÓN -->
+            <div id="step-6" class="step-box locked-step" style="opacity: 0.4; pointer-events: none; border-color: var(--success);">
+                <div class="step-title" style="color: var(--success);">Paso 6: Conclusión y Ficha de Laboratorio</div>
+                <p id="texto-conclusion" style="font-size: 0.95rem; line-height: 1.5; margin-bottom: 15px; word-break: break-word;"></p>
+                
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <button class="btn-action" style="background-color: var(--success); color: white; padding: 14px;" onclick="alert('¡Ficha de cinemática guardada correctamente en el dispositivo!')">Guardar Reporte Final</button>
+                    
+                    <button class="btn-action" style="background-color: #175b6a; color: white; padding: 14px;" onclick="exportarReporteMRUWord()">
+                        Exportar Ficha a PDF (.pdf)
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Lógica JavaScript e Interactiva -->
+    <script>
+        let username = "";
+        const canvas = document.getElementById('mruCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function iniciarSesion() {
+            username = document.getElementById('input-username').value;
+            if(!username.trim()) {
+                alert('Por favor, ingresa tu nombre de usuario para comenzar.');
+                return;
+            }
+            document.getElementById('box-user').style.opacity = '0.6';
+            document.getElementById('box-user').style.pointerEvents = 'none';
+            
+            let s1 = document.getElementById('step-1');
+            s1.style.opacity = '1';
+            s1.style.pointerEvents = 'auto';
+            s1.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function completarPaso1() {
+            let s1 = document.getElementById('step-1');
+            s1.style.opacity = '0.6';
+            s1.style.pointerEvents = 'none';
+
+            let s2 = document.getElementById('step-2');
+            s2.style.opacity = '1';
+            s2.style.pointerEvents = 'auto';
+            s2.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function dibujarPista(posicionX = 20) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Fondo de la pista
+            ctx.fillStyle = '#161b22';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Línea de la carretera
+            ctx.strokeStyle = '#30363d';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(20, 90);
+            ctx.lineTo(280, 90);
+            ctx.stroke();
+
+            // Líneas discontinuas centrales
+            ctx.strokeStyle = '#dda835';
+            ctx.setLineDash([8, 8]);
+            ctx.beginPath();
+            ctx.moveTo(20, 90);
+            ctx.lineTo(280, 90);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Dibujar el vehículo
+            let carW = 40;
+            let carH = 20;
+            let carY = 80;
+
+            ctx.fillStyle = '#58a6ff';
+            ctx.fillRect(posicionX, carY - 12, carW, carH);
+            ctx.fillStyle = '#1f6feb';
+            ctx.fillRect(posicionX + 8, carY - 20, 22, 10);
+
+            ctx.fillStyle = '#c9d1d9';
+            ctx.beginPath();
+            ctx.arc(posicionX + 10, carY + 8, 5, 0, Math.PI * 2);
+            ctx.arc(posicionX + 30, carY + 8, 5, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Marcadores de inicio y meta
+            ctx.fillStyle = '#3fb950';
+            ctx.fillRect(20, 50, 4, 50);
+            ctx.fillStyle = '#f85149';
+            ctx.fillRect(276, 50, 4, 50);
+        }
+
+        // Sincronización entre input numérico y barra deslizante
+        function sincronizarDesdeInput(tipo) {
+            let val = parseFloat(document.getElementById(`num-${tipo}`).value);
+            if (!isNaN(val)) {
+                document.getElementById(`range-${tipo}`).value = val;
+                actualizarVariablesEnVivo();
+            }
+        }
+
+        function sincronizarDesdeRange(tipo) {
+            let val = document.getElementById(`range-${tipo}`).value;
+            document.getElementById(`num-${tipo}`).value = val;
+            actualizarVariablesEnVivo();
+        }
+
+        actualizarVariablesEnVivo();
+
+        function actualizarVariablesEnVivo() {
+            let d = parseFloat(document.getElementById('num-distancia').value) || 0;
+            let t = parseFloat(document.getElementById('num-tiempo').value) || 1;
+
+            if (t <= 0) t = 1;
+
+            let v = d / t;
+            document.getElementById('status-mru-texto').innerText = `Velocidad calculada: ${v.toFixed(2)} m/s`;
+            dibujarPista(20);
+        }
+
+        function fijarHipotesis() {
+            let hipotesis = document.getElementById('input-hipotesis').value;
+            if(!hipotesis.trim()) {
+                alert('Por favor, escribe tu hipótesis antes de fijarla.');
+                return;
+            }
+
+            let campo = document.getElementById('input-hipotesis');
+            campo.disabled = true;
+            campo.style.backgroundColor = '#0d1117';
+            campo.style.color = 'var(--text-secondary)';
+
+            let s2 = document.getElementById('step-2');
+            s2.style.opacity = '0.6';
+            s2.style.pointerEvents = 'none';
+
+            let s3 = document.getElementById('step-3');
+            s3.style.opacity = '1';
+            s3.style.pointerEvents = 'auto';
+            s3.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function ejecutarAnimacionMRU() {
+            let d = parseFloat(document.getElementById('num-distancia').value);
+            let t = parseFloat(document.getElementById('num-tiempo').value);
+
+            if (t <= 0 || isNaN(d) || isNaN(t)) {
+                alert('Introduce valores válidos mayores a cero.');
+                return;
+            }
+
+            let velocidad = d / t;
+            let startX = 20;
+            let endX = 255;
+            let currentX = startX;
+            let totalFrames = 60;
+            let frame = 0;
+
+            let animTimer = setInterval(() => {
+                frame++;
+                currentX = startX + (endX - startX) * (frame / totalFrames);
+                dibujarPista(currentX);
+
+                if (frame >= totalFrames) {
+                    clearInterval(animTimer);
+
+                    let s3 = document.getElementById('step-3');
+                    s3.style.opacity = '0.6';
+                    s3.style.pointerEvents = 'none';
+
+                    let s4 = document.getElementById('step-4');
+                    s4.style.opacity = '1';
+                    s4.style.pointerEvents = 'auto';
+
+                    document.getElementById('datos-experimentales').innerHTML = `
+                        <b>Datos del Ensayo Registrados:</b><br>
+                        • Distancia recorrida: <b>${d} m</b><br>
+                        • Tiempo empleado: <b>${t} s</b><br>
+                        • Velocidad constante resultante (v = d/t): <b>${velocidad.toFixed(2)} m/s</b>
+                    `;
+                    s4.scrollIntoView({ behavior: 'smooth' });
+                }
+            }, 25);
+        }
+
+        function guardarObservacion() {
+            let obs = document.getElementById('input-observacion').value;
+            if(!obs.trim()) {
+                alert('Por favor, redacta tu observación.');
+                return;
+            }
+            let s4 = document.getElementById('step-4');
+            s4.style.opacity = '0.6';
+            s4.style.pointerEvents = 'none';
+
+            let s5 = document.getElementById('step-5');
+            s5.style.opacity = '1';
+            s5.style.pointerEvents = 'auto';
+            s5.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function guardarAnalisis() {
+            let analisis = document.getElementById('input-analisis').value;
+            if(!analisis.trim()) {
+                alert('Por favor, redacta tu análisis.');
+                return;
+            }
+            let s5 = document.getElementById('step-5');
+            s5.style.opacity = '0.6';
+            s5.style.pointerEvents = 'none';
+
+            let s6 = document.getElementById('step-6');
+            s6.style.opacity = '1';
+            s6.style.pointerEvents = 'auto';
+
+            document.getElementById('texto-conclusion').innerHTML = `
+                <b>Ficha Final de Cinemática - Estudiante: ${username}</b><br>
+                • <b>Hipótesis planteada:</b> "${document.getElementById('input-hipotesis').value}"<br>
+                • <b>Observación del estudiante:</b> "${document.getElementById('input-observacion').value}"<br>
+                • <b>Análisis crítico:</b> "${analisis}"<br><br>
+                <b>Conclusión Científica:</b> En el Movimiento Rectilíneo Uniforme (MRU), la velocidad permanece constante al recorrer distancias iguales en tiempos iguales, cumpliendo estrictamente con la relación matemática v = d / t.
+            `;
+            s6.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function exportarReporteMRUWord() {
+            let username = document.getElementById('input-username').value || "Estudiante";
+            let hipotesis = document.getElementById('input-hipotesis').value || "No registrada";
+            let distancia = document.getElementById('num-distancia').value;
+            let tiempo = document.getElementById('num-tiempo').value;
+            let velocidad = (parseFloat(distancia) / parseFloat(tiempo)).toFixed(2);
+            let observacion = document.getElementById('input-observacion').value || "Sin observaciones";
+            let analisis = document.getElementById('input-analisis').value || "Sin análisis";
+            
+            let contenidoHtml = `
+                <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+                <head>
+                    <meta charset="utf-8">
+                    <title>Ficha de Cinemática - VirtuaLab</title>
+                    <style>
+                        body { font-family: 'Segoe UI', Arial, sans-serif; color: #333; line-height: 1.6; padding: 20px; }
+                        h1 { color: #0b3948; text-align: center; border-bottom: 2px solid #dda835; padding-bottom: 10px; }
+                        h2 { color: #114b5f; margin-top: 20px; }
+                        .seccion { background: #f9f9f9; border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 6px; }
+                        .footer { font-size: 0.85rem; color: #666; text-align: center; margin-top: 30px; border-top: 1px solid #ccc; padding-top: 10px; }
+                    </style>
+                </head>
+                <body>
+                    <h1>VirtuaLab - Ficha Experimental de Física (MRU)</h1>
+                    
+                    <div class="seccion">
+                        <p><strong>Estudiante:</strong> ${username}</p>
+                        <p><strong>Fecha de Ejecución:</strong> ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}</p>
+                    </div>
+
+                    <h2>1. Planteamiento e Hipótesis</h2>
+                    <div class="seccion">
+                        <p><strong>Hipótesis planteada:</strong></p>
+                        <p><em>"${hipotesis}"</em></p>
+                    </div>
+
+                    <h2>2. Datos de Experimentación (MRU)</h2>
+                    <div class="seccion">
+                        <ul>
+                            <li><strong>Distancia recorrida (d):</strong> ${distancia} m</li>
+                            <li><strong>Tiempo empleado (t):</strong> ${tiempo} s</li>
+                            <li><strong>Velocidad constante resultante (v = d/t):</strong> ${velocidad} m/s</li>
+                        </ul>
+                    </div>
+
+                    <h2>3. Observaciones del Estudiante</h2>
+                    <div class="seccion">
+                        <p>${observacion}</p>
+                    </div>
+
+                    <h2>4. Análisis Crítico</h2>
+                    <div class="seccion">
+                        <p>${analisis}</p>
+                    </div>
+
+                    <h2>5. Conclusión Científica</h2>
+                    <div class="seccion">
+                        <p>En el Movimiento Rectilíneo Uniforme (MRU), la velocidad permanece constante al recorrer distancias iguales en tiempos iguales, cumpliendo estrictamente con la relación matemática v = d / t.</p>
+                    </div>
+
+                    <h2>Verificación de la Solución</h2>
+                    <p><em>Criterio de éxito:</em> El valor de la velocidad se calculó correctamente a partir de la distancia y el tiempo, y la animación del vehículo recorrió la pista de forma proporcional a los datos introducidos.</p>
+
+                    <div class="footer">
+                        Generado automáticamente desde VirtuaLab PWA - Modo Offline.
+                    </div>
+                </body>
+                </html>
+            `;
+
+            let blob = new Blob(['\ufeff' + contenidoHtml], {
+                type: 'application/msword'
+            });
+
+            let url = URL.createObjectURL(blob);
+            let a = document.createElement('a');
+            a.href = url;
+            a.download = `Reporte_MRU_${username.replace(/\s+/g, '_')}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
