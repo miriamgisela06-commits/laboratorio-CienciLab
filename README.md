@@ -63,7 +63,7 @@ El ajolote de CienciLab acompaña al estudiante durante la práctica y le hace p
 
 Recorrido por la aplicación:
 
-Ver el video demostrativo media/demo-cincilab.mp4
+Ver el video demostrativo [media/demo-cincilab.mp4](https://github.com/miriamgisela06-commits/laboratorio-CienciLab/blob/main/demo-cincilab.mp4)
 ##  Estructura del proyecto
 
 ```
