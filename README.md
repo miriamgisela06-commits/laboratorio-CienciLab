@@ -58,8 +58,7 @@ Asistente virtual
 
 El ajolote de CienciLab acompaña al estudiante durante la práctica y le hace preguntas para guiar su razonamiento (por ejemplo, qué datos respaldan su hipótesis).
 
-<img src="media/asistente-ia.jpg" alt="Asistente virtual de CienciLab" width="300">
-
+<img src="img-asistente-video/img/asistente-ia.jpg" alt="Asistente virtual de CienciLab" width="300">
  Video demostrativo
 
 Recorrido por la aplicación (duración: 3 min 51 s):
